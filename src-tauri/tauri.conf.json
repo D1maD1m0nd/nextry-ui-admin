@@ -1,0 +1,61 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "nextry-ui-admin",
+  "version": "0.1.0",
+  "identifier": "com.nextry-ui-admin.app",
+  "build": {
+    "beforeDevCommand": "npm run start",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist/nextry-ui-admin/browser"
+  },
+  
+  "app": {
+    "windows": [
+      {
+        "title": "nextry-ui-admin",
+        "width": 800,
+        "height": 600
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["msi", "nsis", "appimage", "deb"],
+    "createUpdaterArtifacts": true,
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "webviewInstallMode": {
+        "type": "embedBootstrapper"
+      }
+    },
+    "linux": {
+      "appimage": {
+        "bundleMediaFramework": true
+      },
+      "deb": {
+        "depends": []
+      }
+    },
+    "publisher": "Nextry"
+  },
+
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDExMjE2Mzc3QzcyMEUyRjEKUldUeDRpREhkMk1oRVhFeE1ZWjdlblBXRjZuQ29hNTNKZkIyVXRzOHhOZ3dPYklzcWxTTmcxQkYK",
+      "endpoints": [
+        "https://releases.myapp.com/{{target}}/{{arch}}/{{current_version}}", 
+        "https://github.com/user/repo/releases/latest/download/latest.json"
+      ]
+    }
+  }
+}
