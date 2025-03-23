@@ -6,6 +6,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { NavigationComponent } from './components/navigation/navigation.component';
+import { MatListModule } from '@angular/material/list';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +19,10 @@ import { NavigationComponent } from './components/navigation/navigation.componen
     MatToolbarModule,
     MatIconModule,
     MatButtonModule,
-    NavigationComponent
+    NavigationComponent,
+    MatListModule,
+    RouterLink,
+    RouterLinkActive
   ],
   template: `
     <div class="app-container">
@@ -29,7 +34,24 @@ import { NavigationComponent } from './components/navigation/navigation.componen
             <img src="assets/angular.svg" alt="Angular Logo" class="angular-logo">
             <span class="logo-text">Nextry</span>
           </div>
-          <app-navigation></app-navigation>
+          <mat-nav-list>
+            <a mat-list-item routerLink="/configs" routerLinkActive="active">
+              <mat-icon matListItemIcon>settings</mat-icon>
+              <span matListItemTitle>Конфигурации</span>
+            </a>
+            <a mat-list-item routerLink="/history" routerLinkActive="active">
+              <mat-icon matListItemIcon>history</mat-icon>
+              <span matListItemTitle>История</span>
+            </a>
+            <a mat-list-item routerLink="/responses" routerLinkActive="active">
+              <mat-icon matListItemIcon>message</mat-icon>
+              <span matListItemTitle>Ответы</span>
+            </a>
+            <a mat-list-item routerLink="/assets" routerLinkActive="active">
+              <mat-icon matListItemIcon>image</mat-icon>
+              <span matListItemTitle>Ассеты</span>
+            </a>
+          </mat-nav-list>
         </mat-sidenav>
         <mat-sidenav-content>
           <main class="content">
@@ -102,6 +124,26 @@ import { NavigationComponent } from './components/navigation/navigation.componen
 
     ::ng-deep mat-sidenav-content {
       overflow: hidden !important;
+    }
+
+    .mat-nav-list {
+      padding-top: 0;
+    }
+
+    .mat-list-item {
+      color: #ffffff;
+    }
+
+    .mat-list-item:hover {
+      background-color: #2a2a2a;
+    }
+
+    .active {
+      background-color: #2a2a2a;
+    }
+
+    mat-icon {
+      margin-right: 8px;
     }
   `]
 })
