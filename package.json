@@ -5,8 +5,12 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:prod": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "tauri:dev": "npm run tauri dev",
+    "tauri:build": "npm run tauri build"
+
   },
   "private": true,
   "dependencies": {

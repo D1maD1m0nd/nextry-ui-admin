@@ -3,8 +3,12 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
 import { FeedbackService } from '../../services/feedback.service';
 import { Feedback } from '../../models/feedback.interface';
+import { TimeoutError } from 'rxjs';
 
 @Component({
   selector: 'app-message-dialog',
@@ -48,25 +52,44 @@ export class MessageDialogComponent {
 @Component({
   selector: 'app-responses',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatButtonModule, MatDialogModule],
+  imports: [
+    CommonModule, 
+    MatCardModule, 
+    MatButtonModule, 
+    MatDialogModule,
+    MatSnackBarModule,
+    MatProgressSpinnerModule,
+    MatIconModule
+  ],
   template: `
     <div class="responses-container">
-      <div class="card-grid">
-        @for (response of responses; track response.id) {
-          <mat-card class="response-card">
-            <mat-card-content>
-              <div class="email">{{response.replyEmail}}</div>
-              <div class="title">{{response.title}}</div>
-              <p class="message">{{getTruncatedMessage(response.message)}}</p>
-              <div class="card-footer">
-                <button mat-button color="primary" (click)="openMessage(response)">
-                  Open
-                </button>
-              </div>
-            </mat-card-content>
-          </mat-card>
-        }
-      </div>
+      @if (isLoading) {
+        <div class="loading-container">
+          <mat-spinner diameter="40"></mat-spinner>
+        </div>
+      } @else if (error) {
+        <div class="error-container">
+          <mat-icon color="warn">error_outline</mat-icon>
+          <p>{{ error }}</p>
+        </div>
+      } @else {
+        <div class="card-grid">
+          @for (response of responses; track response.id) {
+            <mat-card class="response-card">
+              <mat-card-content>
+                <div class="email">{{response.replyEmail}}</div>
+                <div class="title">{{response.title}}</div>
+                <p class="message">{{getTruncatedMessage(response.message)}}</p>
+                <div class="card-footer">
+                  <button mat-button color="primary" (click)="openMessage(response)">
+                    Open
+                  </button>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          }
+        </div>
+      }
     </div>
   `,
   styles: [`
@@ -74,6 +97,34 @@ export class MessageDialogComponent {
       padding: 1rem;
       height: 100%;
       overflow: auto;
+    }
+
+    .loading-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 200px;
+    }
+
+    .error-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 20px;
+      color: #f44336;
+    }
+
+    .error-container mat-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+    }
+
+    .error-container p {
+      text-align: center;
+      margin: 0;
+      color: #f44336;
     }
 
     .card-grid {
@@ -142,10 +193,13 @@ export class MessageDialogComponent {
 })
 export class ResponsesComponent implements OnInit {
   responses: Feedback[] = [];
+  isLoading = false;
+  error: string | null = null;
 
   constructor(
     private dialog: MatDialog,
-    private feedbackService: FeedbackService
+    private feedbackService: FeedbackService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -153,26 +207,47 @@ export class ResponsesComponent implements OnInit {
   }
 
   private loadFeedbacks(): void {
-    console.log('Fetching feedbacks from API...');
+    this.isLoading = true;
+    this.error = null;
+
     this.feedbackService.getFeedbacks().subscribe({
       next: (feedbacks) => {
-        console.log('API Response:', {
-          status: 'success',
-          timestamp: new Date().toISOString(),
-          data: feedbacks,
-          count: feedbacks.length
-        });
-        this.responses = feedbacks;
+        this.isLoading = false;
+        if (!feedbacks || feedbacks.length === 0) {
+          this.handleError({ message: 'Нет доступных откликов' });
+        } else {
+          this.responses = feedbacks;
+        }
       },
       error: (error) => {
-        console.error('API Error:', {
-          status: 'error',
-          timestamp: new Date().toISOString(),
-          error: error,
-          message: error.message,
-          statusCode: error.status
-        });
+        this.isLoading = false;
+        this.handleError(error);
       }
+    });
+  }
+
+  private handleError(error: any): void {
+    let errorMessage = 'Произошла ошибка при загрузке данных';
+    
+    if (error instanceof TimeoutError) {
+      errorMessage = `Сервер недоступен (превышено время ожидания)`;
+    } else if (error.status === 404) {
+      errorMessage = `Сервер недоступен`;
+    } else if (error.status === 0) {
+      errorMessage = `Сервер недоступен`;
+    } else if (error.error?.message) {
+      errorMessage = `Ошибка ${error.status}: ${error.error.message}`;
+    } else if (error.message) {
+      errorMessage = `Ошибка: ${error.message} `;
+    }
+
+    this.error = errorMessage;
+    
+    this.snackBar.open(errorMessage, 'Закрыть', {
+      duration: 30000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: ['error-snackbar']
     });
   }
 

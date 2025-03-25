@@ -304,8 +304,34 @@ export class ConfigEditComponent implements OnInit {
   }
 
   save(): void {
-    // TODO: Implement save functionality
-    console.log('Save clicked');
+    if (!this.config || !this.config.id) {
+      console.error('Config is not loaded or missing ID');
+      return;
+    }
+    
+    console.log('Saving config with ID:', this.config.id);
+    
+    this.configService.updateConfig(this.config.id, { config: this.config.config }).subscribe({
+      next: (updatedConfig) => {
+        console.log('Config updated successfully:', {
+          status: 'success',
+          timestamp: new Date().toISOString(),
+          data: updatedConfig
+        });
+        // TODO: Добавить уведомление об успешном сохранении
+        this.router.navigate(['/configs']);
+      },
+      error: (error) => {
+        console.error('Error updating config:', {
+          status: 'error',
+          timestamp: new Date().toISOString(),
+          error: error,
+          message: error.message,
+          statusCode: error.status
+        });
+        // TODO: Добавить уведомление об ошибке
+      }
+    });
   }
 
   close(): void {
