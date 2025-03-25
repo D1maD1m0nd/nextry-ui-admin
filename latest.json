@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "notes": "Описание релиза. Например: Исправлены ошибки, улучшена производительность.",
+    "pub_date": "2025-03-25T12:00:00Z",
+    "platforms": {
+     
+      "windows-x86_64": {
+        "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUeDRpREhkMk1oRVNqSnJ1bU9QdEFPOUVJQTNHWmNkdnBOWXdiNUEvMGcyZzZJbnpwaHFRU3dkKzkyTi8zTndnQU9YbU9QR3Z0MkluMUpHK0JZcWU4cUxZQVlVWG1tY0FZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQyOTI2NjI1CWZpbGU6bmV4dHJ5LXVpLWFkbWluXzAuMi4wX3g2NC1zZXR1cC5leGUKK0lmeDZkZWZMQS9pTnBYeUZVaG9ybEROcHFZZmFmcDJBVm5sT3JpSWI4SDFDeHFCMGovQmlqb2I4MHNRdEIwV1ZkN3FTY1VSdFNiZHFMaVYvTUNLREE9PQo=",
+        "url": "https://releases-app.s3.us-east-1.amazonaws.com/admin/windows-x86_64/nextry-ui-admin_0.2.0_x64-setup.exe"
+      }
+     
+    }
+  }
+  

@@ -51,6 +51,10 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
               <mat-icon matListItemIcon>image</mat-icon>
               <span matListItemTitle>Ассеты</span>
             </a>
+            <a mat-list-item routerLink="/users" routerLinkActive="active">
+              <mat-icon matListItemIcon>people</mat-icon>
+              <span matListItemTitle>Пользователи</span>
+            </a>
           </mat-nav-list>
         </mat-sidenav>
         <mat-sidenav-content>

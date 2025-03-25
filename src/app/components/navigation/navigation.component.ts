@@ -23,6 +23,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
         <mat-icon matListItemIcon>chat</mat-icon>
         <span matListItemTitle>Ответы</span>
       </a>
+      <a mat-list-item routerLink="/users" routerLinkActive="active">
+        <mat-icon matListItemIcon>people</mat-icon>
+        <span matListItemTitle>Пользователи</span>
+      </a>
     </mat-nav-list>
   `,
   styles: [`
