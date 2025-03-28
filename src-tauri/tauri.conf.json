@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "nextry-ui-admin",
-  "version": "0.3.0",
+  "version": "0.3.3",
   "identifier": "com.nextry-ui-admin.app",
   "build": {
     "beforeDevCommand": "npm run start",
@@ -9,14 +9,15 @@
     "devUrl": "http://localhost:1420",
     "beforeBuildCommand": "npm run build:prod",
     "frontendDist": "../dist/nextry-ui-admin/browser"
+    
   },
-  
+ 
   "app": {
     "windows": [
       {
-        "title": "nextry-ui-admin",
-        "width": 800,
-        "height": 600
+        "title": "nextry ui admin",   
+        "width": 1300,
+        "height": 960
       }
     ],
     "security": {
@@ -49,8 +50,7 @@
   "plugins": {
     "updater": {
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDExMjE2Mzc3QzcyMEUyRjEKUldUeDRpREhkMk1oRVhFeE1ZWjdlblBXRjZuQ29hNTNKZkIyVXRzOHhOZ3dPYklzcWxTTmcxQkYK",
-      "endpoints": [
-       
+      "endpoints": [ 
         "https://releases-app.s3.us-east-1.amazonaws.com/admin/latest.json"
       ]
     }

@@ -76,6 +76,19 @@ import { User } from '../../../models/user.interface';
                 </mat-error>
               </mat-form-field>
             </div>
+
+            <div class="form-field">
+              <mat-form-field appearance="outline">
+                <mat-label>Бесплатные тиры</mat-label>
+                <input matInput formControlName="free_tiers" type="number" placeholder="Количество бесплатных тиров">
+                <mat-error *ngIf="userForm.get('free_tiers')?.hasError('required')">
+                  Количество тиров обязательно
+                </mat-error>
+                <mat-error *ngIf="userForm.get('free_tiers')?.hasError('min')">
+                  Количество тиров не может быть отрицательным
+                </mat-error>
+              </mat-form-field>
+            </div>
           </form>
         </mat-card-content>
         
@@ -164,7 +177,8 @@ export class UserEditComponent implements OnInit {
     this.userForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      login: ['', Validators.required]
+      login: ['', Validators.required],
+      free_tiers: [0, [Validators.required, Validators.min(0)]]
     });
   }
 
@@ -186,7 +200,8 @@ export class UserEditComponent implements OnInit {
         this.userForm.patchValue({
           name: user.name,
           email: user.email,
-          login: user.login
+          login: user.login,
+          free_tiers: user.free_tiers
         });
         this.loading = false;
       },
@@ -209,7 +224,8 @@ export class UserEditComponent implements OnInit {
     const userData: Partial<User> = {
       name: this.userForm.value.name,
       email: this.userForm.value.email,
-      login: this.userForm.value.login
+      login: this.userForm.value.login,
+      free_tiers: this.userForm.value.free_tiers
     };
 
     if (this.userId) {

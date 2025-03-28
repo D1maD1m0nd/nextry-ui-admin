@@ -1,6 +1,6 @@
 {
   "name": "nextry-ui-admin",
-  "version": "0.3.0",
+  "version": "0.3.3",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -9,8 +9,8 @@
     "watch": "ng build --watch --configuration development",
     "tauri": "tauri",
     "tauri:dev": "npm run tauri dev",
-    "tauri:build": "npm run tauri build"
-
+    "tauri:build": "npm run tauri build",
+    "generate-update": "ts-node scripts/generate-update-info.ts"
   },
   "private": true,
   "dependencies": {

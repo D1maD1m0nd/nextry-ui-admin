@@ -1,12 +1,12 @@
 {
-    "version": "0.2.0",
+    "version": "0.3.3",
     "notes": "Описание релиза. Например: Исправлены ошибки, улучшена производительность.",
-    "pub_date": "2025-03-25T12:00:00Z",
+    "pub_date": "2025-03-26T12:02:00Z",
     "platforms": {
      
       "windows-x86_64": {
-        "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUeDRpREhkMk1oRVNqSnJ1bU9QdEFPOUVJQTNHWmNkdnBOWXdiNUEvMGcyZzZJbnpwaHFRU3dkKzkyTi8zTndnQU9YbU9QR3Z0MkluMUpHK0JZcWU4cUxZQVlVWG1tY0FZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQyOTI2NjI1CWZpbGU6bmV4dHJ5LXVpLWFkbWluXzAuMi4wX3g2NC1zZXR1cC5leGUKK0lmeDZkZWZMQS9pTnBYeUZVaG9ybEROcHFZZmFmcDJBVm5sT3JpSWI4SDFDeHFCMGovQmlqb2I4MHNRdEIwV1ZkN3FTY1VSdFNiZHFMaVYvTUNLREE9PQo=",
-        "url": "https://releases-app.s3.us-east-1.amazonaws.com/admin/windows-x86_64/nextry-ui-admin_0.2.0_x64-setup.exe"
+        "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUeDRpREhkMk1oRWUvcVVFTzhLUFJZUnI2aWtucDMrYm9PMURhY2V6SXdRaWJ5TnZrV0xDN1F4Qk04Yk0wQlYwd3c4MnhvRzA1Q05xZEZkZWZFdmFZQVE0azdudkpqVXdRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQzMDE1OTYyCWZpbGU6bmV4dHJ5LXVpLWFkbWluXzAuMy4zX3g2NC1zZXR1cC5leGUKeEQ4TVE1RzJVOExhOWhqNTh6Umg3Sk5nUFlBRmw0VXJUdEZGc1FmSHhIcVQwVXV4MGRTaWVzdVp3YWswWWU5TllWbGNySmNJVTRkeWd4VlBvNjFwRFE9PQo=",
+        "url": "https://releases-app.s3.us-east-1.amazonaws.com/admin/windows-x86_64/nextry-ui-admin_0.3.3_x64-setup.exe"
       }
      
     }

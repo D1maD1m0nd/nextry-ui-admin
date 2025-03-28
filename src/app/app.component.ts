@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { MatListModule } from '@angular/material/list';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { UpdateCheckerComponent } from './components/update-checker/update-checker.component';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +23,8 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
     NavigationComponent,
     MatListModule,
     RouterLink,
-    RouterLinkActive
+    RouterLinkActive,
+    UpdateCheckerComponent
   ],
   template: `
     <div class="app-container">
@@ -55,6 +57,10 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
               <mat-icon matListItemIcon>people</mat-icon>
               <span matListItemTitle>Пользователи</span>
             </a>
+            <a mat-list-item routerLink="/prices" routerLinkActive="active">
+              <mat-icon matListItemIcon>attach_money</mat-icon>
+              <span matListItemTitle>Цены</span>
+            </a>
           </mat-nav-list>
         </mat-sidenav>
         <mat-sidenav-content>
@@ -63,6 +69,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
           </main>
         </mat-sidenav-content>
       </mat-sidenav-container>
+      <app-update-checker></app-update-checker>
     </div>
   `,
   styles: [`

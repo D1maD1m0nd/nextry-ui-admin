@@ -5,9 +5,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { UserService } from '../../services/user.service';
 import { User } from '../../models/user.interface';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { debounceTime, distinctUntilChanged, map, Observable, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-users',
@@ -18,7 +22,10 @@ import { Router } from '@angular/router';
     MatButtonModule, 
     MatIconModule, 
     MatTableModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule
   ],
   template: `
     <div class="users-container">
@@ -30,6 +37,20 @@ import { Router } from '@angular/router';
           </button>
         </mat-card-header>
         <mat-card-content>
+          <form [formGroup]="searchForm" class="search-form">
+            <mat-form-field appearance="outline">
+              <mat-label>Поиск по имени</mat-label>
+              <input matInput formControlName="nameSearch" placeholder="Введите имя">
+              <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Поиск по email</mat-label>
+              <input matInput formControlName="emailSearch" placeholder="Введите email">
+              <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+          </form>
+
           <div *ngIf="loading" class="loading-container">
             <mat-spinner diameter="40"></mat-spinner>
           </div>
@@ -39,7 +60,7 @@ import { Router } from '@angular/router';
             <button mat-button color="primary" (click)="loadUsers()">Повторить</button>
           </div>
           
-          <table *ngIf="!loading && !error" mat-table [dataSource]="users" class="users-table">
+          <table *ngIf="!loading && !error" mat-table [dataSource]="filteredUsers$" class="users-table">
             <!-- Имя пользователя -->
             <ng-container matColumnDef="name">
               <th mat-header-cell *matHeaderCellDef>Имя</th>
@@ -56,6 +77,12 @@ import { Router } from '@angular/router';
             <ng-container matColumnDef="login">
               <th mat-header-cell *matHeaderCellDef>Логин</th>
               <td mat-cell *matCellDef="let user">{{ user.login }}</td>
+            </ng-container>
+
+            <!-- Бесплатные тиры -->
+            <ng-container matColumnDef="free_tiers">
+              <th mat-header-cell *matHeaderCellDef>Бесплатные тиры</th>
+              <td mat-cell *matCellDef="let user">{{ user.free_tiers }}</td>
             </ng-container>
             
             <!-- Действия -->
@@ -100,6 +127,16 @@ import { Router } from '@angular/router';
       overflow: auto;
       padding: 16px;
     }
+
+    .search-form {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    mat-form-field {
+      flex: 1;
+    }
     
     .loading-container {
       display: flex;
@@ -121,6 +158,11 @@ import { Router } from '@angular/router';
       width: 120px;
       text-align: center;
     }
+
+    .mat-column-free_tiers {
+      width: 150px;
+      text-align: center;
+    }
     
     .users-table tr.mat-row {
       cursor: pointer;
@@ -133,17 +175,95 @@ import { Router } from '@angular/router';
 })
 export class UsersComponent implements OnInit {
   users: User[] = [];
-  displayedColumns: string[] = ['name', 'email', 'login', 'actions'];
+  filteredUsers$!: Observable<User[]>;
+  displayedColumns: string[] = ['name', 'email', 'login', 'free_tiers', 'actions'];
   loading = false;
   error: string | null = null;
+  searchForm: FormGroup;
 
   constructor(
     private userService: UserService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private route: ActivatedRoute,
+    private fb: FormBuilder
+  ) {
+    this.searchForm = this.fb.group({
+      nameSearch: [''],
+      emailSearch: ['']
+    });
+
+    // Инициализируем поисковый Observable
+    this.filteredUsers$ = this.searchForm.valueChanges.pipe(
+      startWith({ nameSearch: '', emailSearch: '' }),
+      debounceTime(300),
+      distinctUntilChanged(),
+      map(search => this.filterUsers(search))
+    );
+
+    // Подписываемся на изменения формы для обновления URL
+    this.searchForm.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(value => {
+      this.updateUrl(value);
+    });
+  }
 
   ngOnInit(): void {
+    // Подписываемся на изменения URL
+    this.route.queryParams.subscribe(params => {
+      this.searchForm.patchValue({
+        nameSearch: params['name'] || '',
+        emailSearch: params['email'] || ''
+      }, { emitEvent: false }); // Предотвращаем срабатывание valueChanges
+    });
+
     this.loadUsers();
+  }
+
+  private updateUrl(searchParams: { nameSearch: string; emailSearch: string }): void {
+    const queryParams: any = {};
+    
+    if (searchParams.nameSearch?.trim()) {
+      queryParams.name = searchParams.nameSearch.trim();
+    }
+    if (searchParams.emailSearch?.trim()) {
+      queryParams.email = searchParams.emailSearch.trim();
+    }
+
+    // Если все поля пустые, очищаем URL
+    if (Object.keys(queryParams).length === 0) {
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: {},
+        queryParamsHandling: 'merge'
+      });
+    } else {
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams,
+        queryParamsHandling: 'merge'
+      });
+    }
+  }
+
+  private filterUsers(search: { nameSearch: string; emailSearch: string }): User[] {
+    const filteredUsers = this.users.filter(user => {
+      const nameMatch = !search.nameSearch || 
+        user.name.toLowerCase().includes(search.nameSearch.toLowerCase());
+      const emailMatch = !search.emailSearch || 
+        user.email.toLowerCase().includes(search.emailSearch.toLowerCase());
+      return nameMatch && emailMatch;
+    });
+
+    console.log('Поисковый запрос:', {
+      name: search.nameSearch,
+      email: search.emailSearch,
+      найдено: filteredUsers.length,
+      всего: this.users.length
+    });
+
+    return filteredUsers;
   }
 
   loadUsers(): void {

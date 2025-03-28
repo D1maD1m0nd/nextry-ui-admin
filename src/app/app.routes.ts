@@ -6,6 +6,7 @@ import { ResponsesComponent } from './components/responses/responses.component';
 import { AssetsComponent } from './components/assets/assets.component';
 import { UsersComponent } from './components/users/users.component';
 import { UserEditComponent } from './components/users/user-edit/user-edit.component';
+import { PricesComponent } from './components/prices/prices.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/configs', pathMatch: 'full' },
@@ -16,5 +17,6 @@ export const routes: Routes = [
   { path: 'assets', component: AssetsComponent },
   { path: 'users', component: UsersComponent },
   { path: 'users/new', component: UserEditComponent },
-  { path: 'users/:id', component: UserEditComponent }
+  { path: 'users/:id', component: UserEditComponent },
+  { path: 'prices', component: PricesComponent }
 ];
